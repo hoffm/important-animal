@@ -1,6 +1,7 @@
 module ImportantAnimal
   require 'rubygems'
   require 'chatterbot/dsl'
+  require 'namey'
 
   module_function
 
@@ -21,4 +22,27 @@ module ImportantAnimal
   token CREDS['token']
 
 
+  @namey = Namey::Generator.new
+  @gender = [:male, :female].sample
+
+  def name
+    rareness = rand(90)
+
+    @namey.generate(
+      :type => @gender,
+      :with_surname => false,
+      :min_freq => rareness,
+      :max_freq => rareness + 10
+    )
+  end
+
+
+
+  def run
+    puts name
+  end
+
+
 end
+
+ImportantAnimal.run
