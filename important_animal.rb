@@ -36,10 +36,27 @@ module ImportantAnimal
     )
   end
 
+  ['animal', 'trade', 'place'].each do |word_type|
+    define_singleton_method(word_type) do
+      random_line("data/#{word_type}s.txt")
+    end
+  end
+
 
 
   def run
     puts name
+    puts animal
+    puts trade
+    puts place
+  end
+
+  ###
+  # Utils
+  ###
+
+  def random_line(file_path)
+    File.readlines(file_path).sample
   end
 
 
