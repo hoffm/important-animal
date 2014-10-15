@@ -2,6 +2,7 @@ module ImportantAnimal
   require 'rubygems'
   require 'chatterbot/dsl'
   require 'namey'
+  load 'image_search.rb'
 
   module_function
 
@@ -25,7 +26,7 @@ module ImportantAnimal
   @namey = Namey::Generator.new
   @gender = [:male, :female].sample
 
-  def name
+  def get_name
     rareness = rand(90)
 
     @namey.generate(
@@ -37,18 +38,21 @@ module ImportantAnimal
   end
 
   ['animal', 'trade', 'place'].each do |word_type|
-    define_singleton_method(word_type) do
+    define_singleton_method('get_' + word_type) do
       random_line("data/#{word_type}s.txt")
     end
   end
 
+  def get_image_path(animal)
+    ImageSearch.get_and_store_image_for("baby #{animal}")
+  end
 
 
   def run
-    puts name
-    puts animal
-    puts trade
-    puts place
+    puts get_name
+    puts (animal = get_animal)
+    puts (trade = get_trade)
+    puts (place = get_place)
   end
 
   ###
@@ -56,7 +60,7 @@ module ImportantAnimal
   ###
 
   def random_line(file_path)
-    File.readlines(file_path).sample
+    File.readlines(file_path).sample.delete("\n")
   end
 
 
