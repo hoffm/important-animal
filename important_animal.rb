@@ -48,11 +48,25 @@ module ImportantAnimal
   end
 
 
+  def compose_sentence(params, version)
+    name, animal, trade, place = params[:name], params[:animal], params[:trade], params[:place]
+    him_her, he_she = gender_to_accusative(@gender), gender_to_nominative(@gender)
+
+    case version
+      when 1
+        "Meet #{name}. This #{animal} is #{indef_phrase(trade)} from #{place}. Check #{him_her} out!"
+      when 2
+      when 3
+    end
+  end
+
   def run
-    puts get_name
-    puts (animal = get_animal)
-    puts (trade = get_trade)
-    puts (place = get_place)
+    name = get_name
+    animal = get_animal
+    trade = get_trade
+    place = get_place
+    #image = get_image_path(animal)
+
   end
 
   ###
@@ -61,6 +75,25 @@ module ImportantAnimal
 
   def random_line(file_path)
     File.readlines(file_path).sample.delete("\n")
+  end
+
+  def indef_phrase(noun)
+    initial_vowel = noun[0] =~ /[aeiou]/
+    article = if !initial_vowel || noun.starts_with?('utility')
+      'a'
+    else
+      'an'
+    end
+
+    article + ' ' + noun
+  end
+
+  def gender_to_nominative(gender)
+    gender == :male ? 'he' : 'she'
+  end
+
+  def gender_to_accusative(gender)
+    gender == :male ? 'him' : 'her'
   end
 
 
