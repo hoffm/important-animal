@@ -7,8 +7,8 @@ module ImageSearch
   def search(query)
     Google::Search::Image.new(
       :query => query,
-      :image_size => [:medium, :large, :xlarge]
-    ).map(&:uri).slice(0,10).reject do |uri|
+      :image_size => [:large, :xlarge, :xxlarge]
+    ).map(&:uri).slice(0,5).reject do |uri|
       uri.downcase.end_with?('.bmp')
     end.sample
   end

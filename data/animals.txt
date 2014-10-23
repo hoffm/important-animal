@@ -444,7 +444,6 @@ quail
 quetzal
 quokka
 quoll
-r
 rabbit
 raccoon
 raccoon dog

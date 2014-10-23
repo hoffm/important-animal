@@ -48,30 +48,44 @@ module ImportantAnimal
   end
 
   def get_image_path(animal)
-    ImageSearch.get_and_store_image_for("baby #{animal}")
+    ImageSearch.get_and_store_image_for("\"baby #{animal}\"")
   end
 
 
-  def compose_sentence(params, version)
+  def compose_text(params)
     name, animal, trade, place = params[:name], params[:animal], params[:trade], params[:place]
     him_her = @gender == :male ? 'him' : 'her'
     he_she = @gender == :male ? 'he' : 'she'
     his_her = @gender == :male ? 'his' : 'her'
 
-    body = case version
-      when 1
-        "Meet #{name}. This #{animal} is #{indef_phrase(trade)} from #{place}."
-      when 2
-        "#{name} the #{animal} here. #{he_she.capitalize}'s #{indef_phrase(trade)} who makes #{his_her} home in #{place}."
-      when 3
-        "#{trade.capitalize} and #{animal} #{name} is not your average animal."
-      when 4
-        "#{name} the #{trade} from #{place} is at your service."
-      when 5
-        "As #{indef_phrase(trade)} of some renownn, #{name} the #{animal} lives the good life in #{place}."
-      when 6
-        "In #{place}, #{name} the #{animal} found work as #{indef_phrase(trade)}."
-    end
+    lives_in_place = ([
+      "makes #{his_her} home in",
+      'lives in',
+      'lives the good life in',
+      "spends #{his_her} days in",
+      'resides in',
+      'basically rules',
+      'dreams of',
+      'is the mayor of',
+      'rocks out in'
+    ].sample + " #{place}")
+
+    body = [
+        "Meet #{name}. This #{animal} is #{indef_phrase(trade)} from #{place}.",
+        "#{name} the #{animal} here. #{he_she.capitalize}'s #{indef_phrase(trade)} who #{lives_in_place}.",
+        "#{trade.capitalize} and #{animal} #{name} is not your average animal.",
+        "#{trade.capitalize} and #{animal} #{name} #{lives_in_place}.",
+        "#{name} the #{trade} from #{place} is at your service.",
+        "As #{indef_phrase(trade)} of some renown, #{name} the #{animal} #{lives_in_place}.",
+        "In #{place}, #{name} the #{animal} found work as #{indef_phrase(trade)}.",
+        "In #{place}, #{name} found work as #{indef_phrase(trade)}.",
+        "#{name} the #{animal}. Just being #{his_her} bad self.",
+        "#{name} the #{animal}. Just being #{his_her} bad self in #{place}.",
+        "#{name} #{lives_in_place}. #{he_she.capitalize}'s #{indef_phrase(animal)}, of course.",
+        "Who #{lives_in_place}? #{name} the #{animal} -- duh! #{he_she.capitalize}'s #{indef_phrase(trade)}.",
+        "Everyone's favorite #{trade}: #{name} the #{animal}."
+    ].sample
+
 
     prefix = [
       "Oh boy!",
@@ -87,7 +101,6 @@ module ImportantAnimal
       "Alert!",
       "Well, I'll be.",
       "Nothing to see here.",
-      "Is #{he_she} the best animal?",
       "Ahoy!",
       "Unbelievable.",
       "What are the chances?",
@@ -97,11 +110,13 @@ module ImportantAnimal
       "So: ",
       "Perhaps you've heard...",
       "In other news: ",
-      "Happy #{DAY}!"
+      "Happy #{DAY}!",
+      "LOL."
     ].sample
 
     suffix = [
       "Check #{him_her} out!",
+      "Is #{he_she} the best animal?",
       "#{he_she.capitalize}'s a doll.'",
       "Don't hate the player.",
       "A legend.",
@@ -122,23 +137,42 @@ module ImportantAnimal
       "There's #{DAY} for ya."
     ].sample
 
-    prefix + ' ' + body + ' ' + suffix
+
+    text = body
+
+    # Start over if the text is already too long.
+    if text.length > AVAIBLE_CHARS
+      return compose_text(params)
+    end
+
+    if rand < 0.6 && (prefixed = [prefix, text].join(' ')).length < AVAIBLE_CHARS
+      text = prefixed
+    end
+
+    if rand < 0.6 && (suffixed = [text, suffix].join(' ')).length < AVAIBLE_CHARS
+      text = suffixed
+    end
+
+    text
   end
 
 
   def run
-    params = {
-      :name => get_name,
-      :animal => get_animal,
-      :trade => get_trade,
-      :place => get_place,
-    }
+      params = {
+        :name => get_name,
+        :animal => get_animal,
+        :trade => get_trade,
+        :place => get_place,
+      }
 
-    sentence =  compose_sentence(params, (1..6).to_a.sample)
-    puts sentence
-    puts sentence.length
-    #image = get_image_path(animal)
+      text = compose_text(params)
+      #image_path = ImageSearch.search("\"baby #{params[:animal]}\"")
+      path_to_image = get_image_path("\"baby #{params[:animal]}\"")
 
+      client.update_with_media(text, File.new(path_to_image))
+
+      # puts "<p>#{sentence}</p>"
+      # puts "<img src=\"#{image_path}\"></img><br><br>"
   end
 
   ###
@@ -159,7 +193,6 @@ module ImportantAnimal
 
     article + ' ' + noun
   end
-
 
 end
 
