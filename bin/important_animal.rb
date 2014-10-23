@@ -3,7 +3,7 @@ module ImportantAnimal
   require 'chatterbot/dsl'
   require 'namey'
   require 'date'
-  load 'image_search.rb'
+  load 'bin/image_search.rb'
 
   module_function
 
@@ -48,7 +48,7 @@ module ImportantAnimal
   end
 
   def get_image_path(animal)
-    ImageSearch.get_and_store_image_for("\"baby #{animal}\"")
+    ImageSearch.get_and_store_image_for(animal)
   end
 
 
@@ -166,13 +166,10 @@ module ImportantAnimal
       }
 
       text = compose_text(params)
-      #image_path = ImageSearch.search("\"baby #{params[:animal]}\"")
-      path_to_image = get_image_path("\"baby #{params[:animal]}\"")
+      path_to_image = get_image_path(params[:animal])
+      puts
 
       client.update_with_media(text, File.new(path_to_image))
-
-      # puts "<p>#{sentence}</p>"
-      # puts "<img src=\"#{image_path}\"></img><br><br>"
   end
 
   ###
