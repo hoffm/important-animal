@@ -23,11 +23,10 @@ module ImportantAnimal
   secret CREDS['secret']
   token CREDS['token']
 
-
   @namey = Namey::Generator.new
   @gender = [:male, :female].sample
 
-  AVAIBLE_CHARS = 117
+  AVAILABLE_CHARS = 117
   DAY = Date::DAYNAMES[Date.today.wday]
 
   # If provided, tweet one in every FREQUENCY times
@@ -148,15 +147,15 @@ module ImportantAnimal
     text = body
 
     # Start over if the text is already too long.
-    if text.length > AVAIBLE_CHARS
+    if text.length > AVAILABLE_CHARS
       return compose_text(params)
     end
 
-    if rand < 0.6 && (prefixed = [prefix, text].join(' ')).length < AVAIBLE_CHARS
+    if rand < 0.6 && (prefixed = [prefix, text].join(' ')).length < AVAILABLE_CHARS
       text = prefixed
     end
 
-    if rand < 0.6 && (suffixed = [text, suffix].join(' ')).length < AVAIBLE_CHARS
+    if rand < 0.6 && (suffixed = [text, suffix].join(' ')).length < AVAILABLE_CHARS
       text = suffixed
     end
 
@@ -170,28 +169,34 @@ module ImportantAnimal
 
     its_daytime = (8..23).cover?(Time.now.getlocal("-04:00").hour)
 
-    if test_mode || (rand(frequency) == 0 && its_daytime)
-      params = {
-        :name => get_name,
-        :animal => get_animal,
-        :trade => get_trade,
-        :place => get_place,
-      }
+    puts "*"*10
+    if rand(frequency) == 0
+      if its_daytime || test_mode
+        params = {
+          :name => get_name,
+          :animal => get_animal,
+          :trade => get_trade,
+          :place => get_place,
+        }
 
-      text = compose_text(params)
-      path_to_image = get_image_path(params[:animal])
+        text = compose_text(params)
+        path_to_image = get_image_path(params[:animal])
 
-      puts "*"*10
-      if test_mode
-        puts "TESTING MODE. NOT TWEETING."
-        puts "TEXT: #{text}"
-        puts "IMAGE PATH: #{path_to_image}"
+        if test_mode
+          puts "TESTING MODE. NOT TWEETING."
+          puts "TEXT: #{text}"
+          puts "IMAGE PATH: #{path_to_image}"
+        else
+          puts "TWEETING: #{text}"
+          client.update_with_media(text, File.new(path_to_image))
+        end
       else
-        puts "TWEETING: #{text}"
-        client.update_with_media(text, File.new(path_to_image))
+        puts "TOO LATE TO TWEET. STAYING SILENT"
       end
-      puts "*"*10
+    else
+      puts "BAND LUCK. STAYING SILENT."
     end
+    puts "*"*10
   end
 
   ###
