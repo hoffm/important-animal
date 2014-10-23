@@ -30,6 +30,13 @@ module ImportantAnimal
   AVAIBLE_CHARS = 117
   DAY = Date::DAYNAMES[Date.today.wday]
 
+  # If provided, tweet one in every FREQUENCY times
+  # the script is executed.
+  FREQUENCY = ARGV[0] ? ARGV[0].to_i : nil
+
+  # Don't perform public actions in test mode.
+  TEST_MODE = ARGV[1] == 'test'
+
   def get_name
     rareness = rand(90)
 
@@ -157,7 +164,13 @@ module ImportantAnimal
   end
 
 
-  def run
+  def run(opts={})
+    frequency = FREQUENCY || opts[:frequency] || 12
+    test_mode = TEST_MODE || opts[:testing]
+
+    its_daytime = (8..23).cover?(Time.now.getlocal("-04:00").hour)
+
+    if test_mode || (rand(frequency) == 0 && its_daytime)
       params = {
         :name => get_name,
         :animal => get_animal,
@@ -167,9 +180,18 @@ module ImportantAnimal
 
       text = compose_text(params)
       path_to_image = get_image_path(params[:animal])
-      puts
 
-      client.update_with_media(text, File.new(path_to_image))
+      puts "*"*10
+      if test_mode
+        puts "TESTING MODE. NOT TWEETING."
+        puts "TEXT: #{text}"
+        puts "IMAGE PATH: #{path_to_image}"
+      else
+        puts "TWEETING: #{text}"
+        client.update_with_media(text, File.new(path_to_image))
+      end
+      puts "*"*10
+    end
   end
 
   ###
