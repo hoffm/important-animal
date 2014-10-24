@@ -57,7 +57,7 @@ module ImportantAnimal
         puts "TOO LATE TO TWEET. STAYING SILENT"
       end
     else
-      puts "BAND LUCK. STAYING SILENT."
+      puts "BAD LUCK. STAYING SILENT."
     end
     puts "*"*10
   end
