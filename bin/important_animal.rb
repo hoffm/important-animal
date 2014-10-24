@@ -1,7 +1,6 @@
 module ImportantAnimal
   require 'rubygems'
   require 'chatterbot/dsl'
-  require 'namey'
   require 'date'
   load 'bin/image_search.rb'
 
