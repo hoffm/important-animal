@@ -66,7 +66,10 @@ class TextComposition
       "Who #{lives_in_place}? #{@name} the #{@animal} -- duh! #{@he_she.capitalize}'s #{indef_phrase(@trade)}.",
       "Everyone's favorite #{@trade}: #{@name} the #{@animal}.",
       "The #{@trade}s in #{@place} have nothing but respect for #{@name} the #{@animal}.",
-      "Many #{indef_phrase(@animal)} envies #{@name}'s career as a #{@trade}."
+      "Many #{indef_phrase(@animal)} envies #{@name}'s career as a #{@trade}.",
+      "This is #{@name}. Do you know a finer #{@trade} from #{@place}? What #{indef_phrase(@animal)},",
+      "If you're in need of #{indef_phrase(@trade)}, #{@name} is your #{@gender == :male ? 'man' : 'woman'}. Always go #{@animal}.",
+      "Though #{@he_she} #{lives_in_place}, #{@name} is a globetrotting #{@animal}."
     ].sample
   end
 
@@ -98,7 +101,19 @@ class TextComposition
       "LOL.",
       "OMG. OMG.",
       "Here's a familiar one:",
-      "One for the books..."
+      "One for the books...",
+      "Oh baby:",
+      "Must see:",
+      "Stop the presses!",
+      "Oy!",
+      "A special treat:",
+      "What's that you say?",
+      "Who else?",
+      "Ready to be impressed?",
+      "Ooo!",
+      "My.",
+      "My, my.",
+      "My oh my."
     ].sample
   end
 
@@ -126,7 +141,18 @@ class TextComposition
       "Last of #{@his_her} kind.",
       "There's #{DAY} for ya.",
       "Have you ever seen the like?",
-      "Golly!"
+      "Golly!",
+      "Unprecedented.",
+      "Zoom!",
+      "Watch #{@him_her} go!",
+      "Just lovely.",
+      "Lovely.",
+      "Smart.",
+      "Master of #{@his_her} domain.",
+      "A lover, not a fighter.",
+      "Magnifique!",
+      "What a happy #{@gender == :male ? 'guy' : 'gal'}.",
+      "Will #{@he_she} become President some day?"
     ].sample
   end
 
