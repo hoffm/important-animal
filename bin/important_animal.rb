@@ -22,7 +22,6 @@ module ImportantAnimal
   secret CREDS['secret']
   token CREDS['token']
 
-  @namey = Namey::Generator.new
   @gender = [:male, :female].sample
 
   AVAILABLE_CHARS = 117
