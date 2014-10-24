@@ -2,7 +2,7 @@ module ImportantAnimal
   require 'rubygems'
   require 'chatterbot/dsl'
   require 'date'
-  load 'bin/image_search.rb'
+  load 'image_search.rb'
 
   module_function
 
