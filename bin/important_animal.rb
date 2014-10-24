@@ -36,18 +36,8 @@ module ImportantAnimal
   # Don't perform public actions in test mode.
   TEST_MODE = ARGV[1] == 'test'
 
-  def get_name
-    rareness = rand(90)
-
-    @namey.generate(
-      :type => @gender,
-      :with_surname => false,
-      :min_freq => rareness,
-      :max_freq => rareness + 10
-    )
-  end
-
-  ['animal', 'trade', 'place'].each do |word_type|
+  ['animal', 'trade', 'place',
+   'male_name', 'female_name'].each do |word_type|
     define_singleton_method('get_' + word_type) do
       random_line("data/#{word_type}s.txt")
     end
@@ -173,7 +163,7 @@ module ImportantAnimal
     if rand(frequency) == 0
       if its_daytime || test_mode
         params = {
-          :name => get_name,
+          :name => eval("get_#{@gender.to_s}_name"),
           :animal => get_animal,
           :trade => get_trade,
           :place => get_place,
