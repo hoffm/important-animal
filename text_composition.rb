@@ -67,7 +67,7 @@ class TextComposition
       "Everyone's favorite #{@trade}: #{@name} the #{@animal}.",
       "The #{@trade}s in #{@place} have nothing but respect for #{@name} the #{@animal}.",
       "Many #{indef_phrase(@animal)} envies #{@name}'s career as a #{@trade}.",
-      "This is #{@name}. Do you know a finer #{@trade} from #{@place}? What #{indef_phrase(@animal)},",
+      "This is #{@name}. Do you know a finer #{@trade} from #{@place}? What #{indef_phrase(@animal)}.",
       "If you're in need of #{indef_phrase(@trade)}, #{@name} is your #{@gender == :male ? 'man' : 'woman'}. Always go #{@animal}.",
       "Though #{@he_she} #{lives_in_place}, #{@name} is a globetrotting #{@animal}."
     ].sample
