@@ -3,6 +3,7 @@ module ImportantAnimal
   require 'chatterbot/dsl'
   require 'date'
   load 'image_search.rb'
+  load 'text_composition.rb'
 
   module_function
 
@@ -22,11 +23,6 @@ module ImportantAnimal
   secret CREDS['secret']
   token CREDS['token']
 
-  @gender = [:male, :female].sample
-
-  AVAILABLE_CHARS = 117
-  DAY = Date::DAYNAMES[Date.today.wday]
-
   # If provided, tweet one in every FREQUENCY times
   # the script is executed.
   FREQUENCY = ARGV[0] ? ARGV[0].to_i : nil
@@ -34,122 +30,7 @@ module ImportantAnimal
   # Don't perform public actions in test mode.
   TEST_MODE = ARGV[1] == 'test'
 
-  ['animal', 'trade', 'place',
-   'male_name', 'female_name'].each do |word_type|
-    define_singleton_method('get_' + word_type) do
-      random_line("data/#{word_type}s.txt")
-    end
-  end
-
-  def get_image_path(animal)
-    ImageSearch.get_and_store_image_for(animal)
-  end
-
-
-  def compose_text(params)
-    name, animal, trade, place = params[:name], params[:animal], params[:trade], params[:place]
-    him_her = @gender == :male ? 'him' : 'her'
-    he_she = @gender == :male ? 'he' : 'she'
-    his_her = @gender == :male ? 'his' : 'her'
-
-    lives_in_place = ([
-      "makes #{his_her} home in",
-      'lives in',
-      'lives the good life in',
-      "spends #{his_her} days in",
-      'resides in',
-      'basically rules',
-      'dreams of',
-      'is the mayor of',
-      'rocks out in'
-    ].sample + " #{place}")
-
-    body = [
-        "Meet #{name}. This #{animal} is #{indef_phrase(trade)} from #{place}.",
-        "#{name} the #{animal} here. #{he_she.capitalize}'s #{indef_phrase(trade)} who #{lives_in_place}.",
-        "#{trade.capitalize} and #{animal} #{name} is not your average animal.",
-        "#{trade.capitalize} and #{animal} #{name} #{lives_in_place}.",
-        "#{name} the #{trade} from #{place} is at your service.",
-        "As #{indef_phrase(trade)} of some renown, #{name} the #{animal} #{lives_in_place}.",
-        "In #{place}, #{name} the #{animal} found work as #{indef_phrase(trade)}.",
-        "In #{place}, #{name} found work as #{indef_phrase(trade)}.",
-        "#{name} the #{animal}. Just being #{his_her} bad self.",
-        "#{name} the #{animal}. Just being #{his_her} bad self in #{place}.",
-        "#{name} #{lives_in_place}. #{he_she.capitalize}'s #{indef_phrase(animal)}, of course.",
-        "Who #{lives_in_place}? #{name} the #{animal} -- duh! #{he_she.capitalize}'s #{indef_phrase(trade)}.",
-        "Everyone's favorite #{trade}: #{name} the #{animal}."
-    ].sample
-
-
-    prefix = [
-      "Oh boy!",
-      "Aw yeah.",
-      "Who's that?",
-      "Look!",
-      "What a sight!",
-      "Yo.",
-      "Animal time.",
-      "#{he_she.capitalize} came to party.",
-      "Look out.",
-      "Watch out now.",
-      "Alert!",
-      "Well, I'll be.",
-      "Nothing to see here.",
-      "Ahoy!",
-      "Unbelievable.",
-      "What are the chances?",
-      "Cuddle much?",
-      "Pay attention!",
-      "Professional to the max:",
-      "So: ",
-      "Perhaps you've heard...",
-      "In other news: ",
-      "Happy #{DAY}!",
-      "LOL."
-    ].sample
-
-    suffix = [
-      "Check #{him_her} out!",
-      "Is #{he_she} the best animal?",
-      "#{he_she.capitalize}'s a doll.'",
-      "Don't hate the player.",
-      "A legend.",
-      "An animal on a mission.",
-      "#{he_she.capitalize} came to party.",
-      "Good times.",
-      "#{he_she.capitalize} knows exactly what #{he_she}'s doing.",
-      "Unrivaled.",
-      "Peerless.",
-      "Unflappable.",
-      "Breathtaking.",
-      "Magestic.",
-      "#{he_she.capitalize}'s got a heart of gold.",
-      "On top of #{his_her} game.",
-      "Mysterious.",
-      "Can't make this up.",
-      "Last of #{his_her} kind.",
-      "There's #{DAY} for ya."
-    ].sample
-
-
-    text = body
-
-    # Start over if the text is already too long.
-    if text.length > AVAILABLE_CHARS
-      return compose_text(params)
-    end
-
-    if rand < 0.6 && (prefixed = [prefix, text].join(' ')).length < AVAILABLE_CHARS
-      text = prefixed
-    end
-
-    if rand < 0.6 && (suffixed = [text, suffix].join(' ')).length < AVAILABLE_CHARS
-      text = suffixed
-    end
-
-    text
-  end
-
+  GENDER = [:male, :female].sample
 
   def run(opts={})
     frequency = FREQUENCY || opts[:frequency] || 12
@@ -160,14 +41,8 @@ module ImportantAnimal
     puts "*"*10
     if rand(frequency) == 0
       if its_daytime || test_mode
-        params = {
-          :name => eval("get_#{@gender.to_s}_name"),
-          :animal => get_animal,
-          :trade => get_trade,
-          :place => get_place,
-        }
 
-        text = compose_text(params)
+        params, text = get_params_and_tweet_text
         path_to_image = get_image_path(params[:animal])
 
         if test_mode
@@ -187,23 +62,33 @@ module ImportantAnimal
     puts "*"*10
   end
 
-  ###
-  # Utils
-  ###
+  def get_params_and_tweet_text
+    params = {
+      :name => eval("get_#{GENDER.to_s}_name"),
+      :animal => get_animal,
+      :trade => get_trade,
+      :place => get_place,
+      :gender => GENDER
+    }
+
+    text = TextComposition.new(params).tweet_text
+
+    [params, text]
+  end
+
+  def get_image_path(animal)
+    ImageSearch.get_and_store_image_for(animal)
+  end
+
+  ['animal', 'trade', 'place',
+   'male_name', 'female_name'].each do |word_type|
+    define_singleton_method('get_' + word_type) do
+      random_line("data/#{word_type}s.txt")
+    end
+  end
 
   def random_line(file_path)
     File.readlines(file_path).sample.delete("\n")
-  end
-
-  def indef_phrase(noun)
-    initial_vowel = noun[0] =~ /[aeiou]/
-    article = if !initial_vowel || noun[0,7] == 'utility'
-      'a'
-    else
-      'an'
-    end
-
-    article + ' ' + noun
   end
 
 end
