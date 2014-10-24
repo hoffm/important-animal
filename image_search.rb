@@ -1,6 +1,7 @@
 module ImageSearch
   require 'google-search'
   require 'open-uri'
+  require 'fileutils'
 
   module_function
 
@@ -15,6 +16,7 @@ module ImageSearch
 
   def get_and_store_image_for(animal)
     uri = search(animal)
+    FileUtils::mkdir_p("./images/")
 
     file_path = "./images/" +
                 animal.gsub(' ','_') + '_' +
