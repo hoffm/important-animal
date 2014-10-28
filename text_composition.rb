@@ -10,6 +10,7 @@ class TextComposition
     @him_her = @gender == :male ? 'him' : 'her'
     @he_she = @gender == :male ? 'he' : 'she'
     @his_her = @gender == :male ? 'his' : 'her'
+    @man_woman = @gender == :male ? 'man' : 'woman'
   end
 
   def tweet_text
@@ -54,7 +55,6 @@ class TextComposition
     [
       "Meet #{@name}. This #{@animal} is #{indef_phrase(@trade)} from #{@place}.",
       "#{@name} the #{@animal} here. #{@he_she.capitalize}'s #{indef_phrase(@trade)} who #{lives_in_place}.",
-      "#{@trade.capitalize} (and #{@animal}) #{@name} is not your average animal.",
       "#{@trade.capitalize} (and #{@animal}) #{@name} #{lives_in_place}.",
       "#{@name} the #{@trade} from #{@place} is at your service.",
       "As #{indef_phrase(@trade)} of some renown, #{@name} the #{@animal} #{lives_in_place}.",
@@ -68,8 +68,15 @@ class TextComposition
       "The #{@trade}s in #{@place} have nothing but respect for #{@name} the #{@animal}.",
       "Many #{indef_phrase(@animal)} envies #{@name}'s career as a #{@trade}.",
       "This is #{@name}. Do you know a finer #{@trade} from #{@place}? What #{indef_phrase(@animal)}.",
-      "If you're in need of #{indef_phrase(@trade)}, #{@name} is your #{@gender == :male ? 'man' : 'woman'}. Always go #{@animal}.",
-      "Though #{@he_she} #{lives_in_place}, #{@name} is a globetrotting #{@animal}."
+      "If you're in need of #{indef_phrase(@trade)}, #{@name} is your #{@man_woman}. Always go #{@animal}.",
+      "Though #{@he_she} #{lives_in_place}, #{@name} is a globetrotting #{@animal}.",
+      "Introducing the #{@animal} of the hour: #{@name} the #{@trade} from #{@place}!",
+      "Presenting the #{@trade} of the hour: #{@name} the #{@animal} from #{@place}!",
+      "#{@he_she.capitalize} answers to \"#{@name}\". Or to \"#{@name} the super #{@trade}\".",
+      "Visiting #{@place}? Why not pay a visit to this #{@animal}, #{@name} the #{@trade}?.",
+      "#{@name}'s #{@his_her} name. Being #{indef_phrase(@trade)}'s #{@his_her} game.",
+      "Say a friendly hello to #{@name} the #{@animal}. #{@he_she.capitalize} is dating #{indef_phrase(@trade)} from #{@place}.",
+      "Say hi to #{@name} the #{@animal}. #{@he_she.capitalize}'s #{indef_phrase(@trade)} from #{@place}."
     ].sample
   end
 
@@ -113,7 +120,8 @@ class TextComposition
       "Ooo!",
       "My.",
       "My, my.",
-      "My oh my."
+      "My oh my.",
+      "#{@man_woman.capitalize} of the hour!"
     ].sample
   end
 
