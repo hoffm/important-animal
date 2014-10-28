@@ -33,7 +33,7 @@ module ImportantAnimal
   GENDER = [:male, :female].sample
 
   def run(opts={})
-    frequency = FREQUENCY || opts[:frequency] || 12
+    frequency = FREQUENCY || opts[:frequency] || 8
     test_mode = TEST_MODE || opts[:testing]
 
     its_daytime = (8..23).cover?(Time.now.getlocal("-04:00").hour)
