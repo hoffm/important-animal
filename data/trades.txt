@@ -18,8 +18,7 @@ leather
 dresser
 mantuamaker
 milliner
-music
-teacher
+music teacher
 printer
 ropemaker
 saddler
