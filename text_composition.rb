@@ -129,7 +129,7 @@ class TextComposition
     [
       "Check #{@him_her} out!",
       "Is #{@he_she} the best animal?",
-      "#{@he_she.capitalize}'s a doll.'",
+      "#{@he_she.capitalize}'s a doll.",
       "Don't hate the player.",
       "A legend.",
       "An animal on a mission.",
