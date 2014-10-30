@@ -76,7 +76,9 @@ class TextComposition
       "Visiting #{@place}? Why not pay a visit to this #{@animal}, #{@name} the #{@trade}?.",
       "#{@name}'s #{@his_her} name. Being #{indef_phrase(@trade)}'s #{@his_her} game.",
       "Say a friendly hello to #{@name} the #{@animal}. #{@he_she.capitalize} is dating #{indef_phrase(@trade)} from #{@place}.",
-      "Say hi to #{@name} the #{@animal}. #{@he_she.capitalize}'s #{indef_phrase(@trade)} from #{@place}."
+      "Say hi to #{@name} the #{@animal}. #{@he_she.capitalize}'s #{indef_phrase(@trade)} from #{@place}.",
+      "#{@animal.capitalize} alert! #{@name} is in the house repping #{@place} where #{@he_she} is #{indef_phrase(@trade)}.",
+      "Which #{@animal} #{lives_in_place}? None other than #{@name} the #{@animal}!"
     ].sample
   end
 
