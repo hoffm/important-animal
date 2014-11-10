@@ -73,7 +73,7 @@ class TextComposition
       "Introducing the #{@animal} of the hour: #{@name} the #{@trade} from #{@place}!",
       "Presenting the #{@trade} of the hour: #{@name} the #{@animal} from #{@place}!",
       "#{@he_she.capitalize} answers to \"#{@name}\". Or to \"#{@name} the super #{@trade}\".",
-      "Visiting #{@place}? Why not pay a visit to this #{@animal}, #{@name} the #{@trade}?.",
+      "Visiting #{@place}? Why not pay a visit to this #{@animal}, #{@name} the #{@trade}?",
       "#{@name}'s #{@his_her} name. Being #{indef_phrase(@trade)}'s #{@his_her} game.",
       "Say a friendly hello to #{@name} the #{@animal}. #{@he_she.capitalize} is dating #{indef_phrase(@trade)} from #{@place}.",
       "Say hi to #{@name} the #{@animal}. #{@he_she.capitalize}'s #{indef_phrase(@trade)} from #{@place}.",
