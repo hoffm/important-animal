@@ -7,7 +7,7 @@ module ImageSearch
 
   def search(animal)
     Google::Search::Image.new(
-      :query => "\"baby #{animal}\"",
+      :query => "\"cute #{animal}\"",
       :image_size => [:large, :xlarge, :xxlarge]
     ).map(&:uri).slice(0,5).reject do |uri|
       uri.downcase.end_with?('.bmp')
